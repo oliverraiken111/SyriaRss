@@ -41,7 +41,7 @@ else:
         if not href.startswith("/content/") or not title or title in seen_urls:
             continue
 
-        full_url = "https://www.ft.com" + href
+        full_url = "https://www.ft.com/syria" + href
         seen_urls.add(title)
 
         item = ET.SubElement(channel, "item")
