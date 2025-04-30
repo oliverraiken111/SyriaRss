@@ -24,6 +24,7 @@ ET.SubElement(channel, 'lastBuildDate').text = datetime.datetime.utcnow().strfti
 articles_found = 0
 seen_titles = set()
 
+# FT article containers typically use a tag like 'a' inside a div with class="o-teaser__heading"
 for teaser in soup.select('a.js-teaser-heading-link[href^="/content/"]'):
     title = teaser.get_text(strip=True)
     href = teaser["href"]
@@ -34,30 +35,30 @@ for teaser in soup.select('a.js-teaser-heading-link[href^="/content/"]'):
     seen_titles.add(title)
     full_url = "https://www.ft.com" + href
 
-    # Try to get actual pubDate from the article page
+    # Fetch actual article page to get pubDate
     try:
         article_resp = requests.get(full_url, headers=headers)
         article_resp.raise_for_status()
         article_soup = BeautifulSoup(article_resp.text, "html.parser")
 
-        # FT meta tag for published time
-        meta_tag = article_soup.find("meta", attrs={"property": "article:published_time"})
-        if meta_tag and meta_tag.get("content"):
-            pub_date_iso = meta_tag["content"]
-            pub_date = datetime.datetime.fromisoformat(pub_date_iso.rstrip("Z"))
-            pub_date_str = pub_date.strftime("%a, %d %b %Y %H:%M:%S GMT")
+        # FT articles use this meta tag for publication time
+        meta_time = article_soup.find("meta", {"property": "article:published_time"})
+        if meta_time and meta_time.get("content"):
+            pub_date_iso = meta_time["content"].rstrip("Z")
+            pub_date = datetime.datetime.fromisoformat(pub_date_iso)
         else:
-            pub_date_str = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+            raise ValueError("Missing publication date meta tag")
 
     except Exception as e:
-        print(f"⚠️ Failed to fetch pubDate for {full_url}: {e}")
-        pub_date_str = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+        print(f"⚠️ Failed to get pubDate for {title}: {e}")
+        pub_date = datetime.datetime.utcnow()  # fallback
 
+    # Add to RSS
     item = ET.SubElement(channel, "item")
     ET.SubElement(item, "title").text = title
     ET.SubElement(item, "link").text = full_url
     ET.SubElement(item, "description").text = f"FT article on Syria: {title}"
-    ET.SubElement(item, "pubDate").text = pub_date_str
+    ET.SubElement(item, "pubDate").text = pub_date.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
     articles_found += 1
     if articles_found >= 10:
