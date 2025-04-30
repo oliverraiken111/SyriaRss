@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 import xml.etree.ElementTree as ET
+import json
 
 # FT Syria section
 url = "https://www.ft.com/syria"
@@ -24,7 +25,6 @@ ET.SubElement(channel, 'lastBuildDate').text = datetime.datetime.utcnow().strfti
 articles_found = 0
 seen_titles = set()
 
-# FT article containers typically use a tag like 'a' inside a div with class="o-teaser__heading"
 for teaser in soup.select('a.js-teaser-heading-link[href^="/content/"]'):
     title = teaser.get_text(strip=True)
     href = teaser["href"]
@@ -35,25 +35,25 @@ for teaser in soup.select('a.js-teaser-heading-link[href^="/content/"]'):
     seen_titles.add(title)
     full_url = "https://www.ft.com" + href
 
-    # Fetch actual article page to get pubDate
+    # Fetch article page to extract real pubDate
+    pub_date = datetime.datetime.utcnow()  # fallback if not found
     try:
         article_resp = requests.get(full_url, headers=headers)
         article_resp.raise_for_status()
         article_soup = BeautifulSoup(article_resp.text, "html.parser")
 
-        # FT articles use this meta tag for publication time
-        meta_time = article_soup.find("meta", {"property": "article:published_time"})
-        if meta_time and meta_time.get("content"):
-            pub_date_iso = meta_time["content"].rstrip("Z")
-            pub_date = datetime.datetime.fromisoformat(pub_date_iso)
-        else:
-            raise ValueError("Missing publication date meta tag")
+        json_ld_tag = article_soup.find("script", type="application/ld+json")
+        if json_ld_tag:
+            json_ld = json.loads(json_ld_tag.string)
+            if isinstance(json_ld, list):
+                json_ld = json_ld[0]
+            date_str = json_ld.get("datePublished")
+            if date_str:
+                pub_date = datetime.datetime.fromisoformat(date_str.replace("Z", "+00:00"))
 
     except Exception as e:
-        print(f"⚠️ Failed to get pubDate for {title}: {e}")
-        pub_date = datetime.datetime.utcnow()  # fallback
+        print(f"⚠️ Failed to extract pubDate for '{title}': {e}")
 
-    # Add to RSS
     item = ET.SubElement(channel, "item")
     ET.SubElement(item, "title").text = title
     ET.SubElement(item, "link").text = full_url
