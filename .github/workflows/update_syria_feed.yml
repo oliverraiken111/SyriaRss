@@ -33,13 +33,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Pull latest changes
-        run: git pull origin main --rebase
-
       - name: Commit and push updated RSS feed
         run: |
           git add syria_fixed.xml
           git commit -m "Auto-update Syria RSS feed" || echo "No changes to commit"
+          git pull origin main --rebase
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
