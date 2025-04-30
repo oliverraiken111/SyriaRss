@@ -47,8 +47,8 @@ for a_tag in soup.find_all('a', href=True):
         if articles_found >= 10:
             break
 
-# Write RSS feed to file
-with open("syria_fixed.xml", "w", encoding="utf-8") as f:
+# Write RSS feed to file (corrected binary write mode)
+with open("syria_fixed.xml", "wb") as f:
     ET.ElementTree(rss).write(f, encoding="utf-8", xml_declaration=True)
 
 print(f"✅ RSS feed created with {articles_found} articles.")
