@@ -1,0 +1,37 @@
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" 
+     xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+     xmlns:atom="http://www.w3.org/2005/Atom" 
+     xmlns:media="http://search.yahoo.com/mrss/" 
+     version="2.0">
+<channel>
+  <title><![CDATA[ Syria ]]></title>
+  <description><![CDATA[ Breaking news and top stories from Syria. The latest on the economy, politics, government, and business ]]></description>
+  <link>https://www.ft.com/syria</link>
+  <image>
+
+<url>https://www.ft.com/__origami/service/image/v2/images/raw/ftlogo-v1:brand-ft-logo-square-coloured?source=update-logos&amp;format=png&amp;width=194&amp;height=194</url>
+    <title>Syria</title>
+    <link>https://www.ft.com/syria</link>
+  </image>
+  <lastBuildDate>Wed, 30 Apr 2025 17:41:07 GMT</lastBuildDate>
+  <language><![CDATA[ en-GB ]]></language>
+
+  <!-- You can uncomment and update this <atom:link> tag if self-hosting the feed -->
+  <!-- <atom:link href="https://yourdomain.com/rss/syria.xml" rel="self" type="application/rss+xml"/> -->
+
+  <!-- All <item> elements preserved as-is -->
+  <!-- Paste your <item> elements here without modification -->
+
+
+<item>
+<title><![CDATA[ Sectarian clashes in Syria raise questions about al-Sharaa’s rule ]]></title>
+<description><![CDATA[ <div><img src="https://www.ft.com/__origami/service/image/v2/images/raw/https:/d1e00ek4ebabms.cloudfront.net/production/6b91a6eb-3a2a-4eaa-947d-f011280b8522.jpg?source=next-barrier-page" style="width: 100%;" /><div>Eleven reported killed after state-linked militias attack Druze communities near Damascus</div></div> ]]></description>
+<link>https://www.ft.com/content/bb587304-de8f-4d1c-b103-3f45f09be891</link>
+<guid isPermaLink="false">c1d88a945f85b7a7f410f07814ff27d3</guid>
+<dc:creator><![CDATA[ Sarah Dadouch ]]></dc:creator>
+<pubDate>Wed, 30 Apr 2025 13:51:21 GMT</pubDate>
+<media:content medium="image" url="https://www.ft.com/__origami/service/image/v2/images/raw/https:/d1e00ek4ebabms.cloudfront.net/production/6b91a6eb-3a2a-4eaa-947d-f011280b8522.jpg?source=next-barrier-page"/>
+</item>
+
+</channel>
+</rss>
